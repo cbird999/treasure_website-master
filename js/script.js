@@ -151,23 +151,27 @@ var rates = {
 var updateData;
 
 periods = [];
-for (var i=0; i < 3; i++) { 
+for (var i=0; i<36; i++) {
+  periods.push(i);
+}
+console.log(periods);
+/*for (var i=0; i < 3; i++) { 
   var year = String(2017 + i);
   for (var j = 1; j < 13; j++) { 
     var month = j < 10 ? '0' + String(j) : j;
     periods.push(year+month); 
   } 
-}
+}*/
 
 var financialFunction = function(sd, mbr, moc, rate, i) {
   //return (Math.pow(sd, rate) * i - mbr) ;
   var P = sd,
-    r = rate/100,
     n = 36,
-    t = i/12;
-  var nt = n * t;
-  var A = P * Math.pow((1 + r/n), nt);
-  return A;
+    t = i/12,
+    r = rate/100,
+    body = 1 + r/n,
+    exponent = n * t;
+  return P * Math.pow(body, exponent);
 }
 
 var genData = function() {  
@@ -205,14 +209,34 @@ var dateFormat = d3.time.format('%Y%m');
 //var x = d3.time.scale()
 //    .range([0, width]);
 var x = d3.scale.linear()
-  .range([0, width]);
+  .range([0, width])
+  .nice();
 
 var y = d3.scale.linear()
-  .range([height, 0]);
+  .range([height, 0])
+  .nice();
 
 var xAxis = d3.svg.axis()
   .scale(x)
-  .orient('bottom');
+  .orient('bottom')
+  .tickFormat(function(d, i) {
+    console.log("x axis tick:", d);
+    switch(d) {
+      case 0: 
+        return 'Today';
+        break;
+      case 0.3: 
+        return'One Year';
+        break;
+      case 0.6: 
+        return'Two Years';
+        break;
+      case 1: 
+        return'Three Years';
+        break;
+      default: return;
+    }
+  });
 
 var yAxis = d3.svg.axis()
   .scale(y)
@@ -239,6 +263,14 @@ svg.append('g')
   .attr('class', 'x axis')
   .attr('transform', 'translate(0,' + height + ')')
   .call(xAxis);
+d3.selectAll('.x.axis g.tick')
+  .filter(function(d){ return d==0 || d == 1;} )
+  .select('text')
+  .style('text-anchor', 'end');
+d3.selectAll('.x.axis g.tick')
+  .filter(function(d){ return d==0.3 || d == 0.6;} )
+  .select('text')
+  .style('text-anchor', 'start');
 
 svg.append('g')
   .attr('class', 'y axis')
@@ -400,7 +432,8 @@ var makeChart = function(chartData) {
     .attr('text-anchor', 'end')
     .text( function (d,i) { return '$' + addCommas(parseInt(d.y)); }); */
   // Remove y axis ticks
-  d3.selectAll('.y.axis .tick').remove()
+  d3.selectAll('.y.axis .tick').remove();
+  d3.selectAll('.x.axis .tick line').remove();
 };
 
 var updateChart = function(updateData) {
