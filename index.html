@@ -25,25 +25,24 @@
       font-size: .8em;
     }
     .line {
-      stroke-width: 2;
+      stroke-width: 1;
     }
     .line.treasure {
       fill: none;
       stroke: #00c6f8;
-      stroke: #aaa;
     }
     .line.banks {
       fill: none;
       stroke: #a9beee;
-      stroke: #aaa;
+      stroke-dasharray: 5;
     }
     .line.community {
       fill: none;
       stroke: #7ee4ed;
-      stroke: #aaa;
+      stroke-dasharray: 15;
     }
     .area {
-      fill-opacity: .5;
+      fill-opacity: .3;
     }
     .area.treasure {
       fill: #00c6f8;
@@ -96,8 +95,18 @@
     .legend #banks .icon {
       border-top: 3px dotted #a9beee;
     }
-    .dim {
+    .dim-text {
       opacity: .5;
+    }
+    .area.dim-area {
+      fill-opacity: .1;
+    }
+    .line.dim-line {
+      stroke-width: 1;
+      stroke-opacity: .3;
+    }
+    .line.highlight-line {
+      stroke-width: 2;
     }
     .kings {
       fill: none;

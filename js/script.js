@@ -126,14 +126,23 @@ $(function () {
     thisInst = $(this).attr('id');
     for (var inst in rates) { 
       if (thisInst != inst) {
-        $('.legend #' + inst).addClass('dim');
-        document.querySelector('path.area.' + inst).classList.add('dim');
+        $('.legend #' + inst).addClass('dim-text');
+        document.querySelector('path.area.' + inst).classList.add('dim-area');
+        document.querySelector('path.line.' + inst).classList.add('dim-line');
+      } else {
+        document.querySelector('path.line.' + inst).classList.add('highlight-line');
       }
     }
   }, function(e) {
-    $('.legend li').removeClass('dim');
+    $('.legend li').removeClass('dim-text');
+    thisInst = $(this).attr('id');
     for (var inst in rates) { 
-      document.querySelector('path.area.' + inst).classList.remove('dim');
+      if (thisInst != inst) {
+        document.querySelector('path.area.' + inst).classList.remove('dim-area');
+        document.querySelector('path.line.' + inst).classList.remove('dim-line');
+      } else {
+        document.querySelector('path.line.' + inst).classList.remove('highlight-line');
+      }
     }
   });
 });
@@ -154,7 +163,7 @@ periods = [];
 for (var i=0; i<36; i++) {
   periods.push(i);
 }
-console.log(periods);
+//console.log(periods);
 /*for (var i=0; i < 3; i++) { 
   var year = String(2017 + i);
   for (var j = 1; j < 13; j++) { 
@@ -220,7 +229,7 @@ var xAxis = d3.svg.axis()
   .scale(x)
   .orient('bottom')
   .tickFormat(function(d, i) {
-    console.log("x axis tick:", d);
+    //console.log("x axis tick:", d);
     switch(d) {
       case 0: 
         return 'Today';
