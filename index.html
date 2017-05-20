@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Treasure &middot; Automated Financial Management for Small and Medium-Sized Businesses</title>
+  <meta name="description" content="Banking has been neglecting small to medium-sized business. Through technology and artificial intelligence, Treasure provides your business with simplified bank account management and a greater return on idle cash.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/rangeslider.css">
+  <link rel="stylesheet" href="css/c3.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00c6f8">
+  <meta name="theme-color" content="#ffffff">
+  <style>
+    .axis path, .axis line {
+      fill: none;
+      stroke: #ddd;
+      shape-rendering: crispEdges;
+    }
+    .x.axis .tick text {
+      fill: #888;
+      font-size: .8em;
+    }
+    .line {
+      stroke-width: 2;
+    }
+    .line.treasure {
+      fill: none;
+      stroke: #00c6f8;
+      stroke: #aaa;
+    }
+    .line.banks {
+      fill: none;
+      stroke: #a9beee;
+      stroke: #aaa;
+    }
+    .line.community {
+      fill: none;
+      stroke: #7ee4ed;
+      stroke: #aaa;
+    }
+    .area {
+      fill-opacity: .5;
+    }
+    .area.treasure {
+      fill: #00c6f8;
+      stroke: #00c6f8;
+      stroke-width: 0;
+    }
+    .area.banks {
+      fill: #a9beee;
+      stroke: #a9beee;
+      stroke-width: 0;
+    }
+    .area.community {
+      fill: #7ee4ed;
+      stroke: #7ee4ed;
+      stroke-width: 0;
+    }
+    circle {
+      fill: indianred;
+    }
+    circle.endpoint_community {
+
+    }
+    .text-labels text {
+      font-size: .9em;
+      fill: #333;
+    }
+    .legend {
+      margin-left: 50px;
+    }
+    .legend ul {
+      list-style: none;
+    }
+    .legend li {
+      display: inline;
+      font-size: .8em;
+      line-height: .8em;
+    }
+    .legend .icon {
+      display: inline-block;
+      width: .8em;
+      height: .4em;
+      margin-right: 3px;
+    }
+    .legend #treasure .icon {
+      border-top: 3px solid #00c6f8;
+    }
+    .legend #community .icon {
+      border-top: 3px dashed #7ee4ed;
+    }
+    .legend #banks .icon {
+      border-top: 3px dotted #a9beee;
+    }
+    .dim {
+      opacity: .5;
+    }
+    .kings {
+      fill: none;
+      stroke: orange;
+      stroke-width: 2px;
+    }
+    .xlabel, .ylabel {
+      font-size:16px;
+      color: red;
+    }
+    .datapoint_kings {
+      fill: orange;
+      stroke: none;
+      stroke-width: 2;
+    }
+    .datapoint_kings:hover {
+      fill: orange;
+      stroke: orange;
+      stroke-width: 4;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero" id="top">
+    <div class="wrapper">
+      <header role="banner">
+        <div class="masthead">
+          <a href="#" class="logo"><img src="img/treasure-logo.svg" alt="Treasure"></a>
+        </div>
+        <!-- <nav id="nav">
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Security</a></li>
+            <li><a href="#">Log In</a></li>
+            <li><a href="#">Sign Up</a></li>
+          </ul>
+        </nav> -->
+      </header>
+      <section class="hero-content" role="main">
+        <h1>Automated Financial Management</h1>
+        <p>Treasure provides an easy-to-use, automated platform that offers a single
+        look at your financial status &#8212; highlighting inefficiencies and turning them
+        into competitive advantages.</p>
+        <form id="subForm" action="https://treasure1.createsend.com/t/d/s/mvttl/" method="post">
+          <label form="email">Email</label>
+          <input type="text" name="cm-mvttl-mvttl" placeholder="Enter email for early access"></input>
+          <button type="submit"><img src="img/icons-submit-arrow.svg" /></button>
+        </form>
+      </section>
+    </div><!--.wrapper-->
+  </div><!--.hero-->
+  <section class="features cf wrapper">
+    <div class="feature-left">
+      <img src="img/icon-bank-account-management.svg" class="icons">
+      <h3>Bank Account Management</h3>
+      <p>An intuitively designed dashboard, connecting all of your accounts,
+      offers up-to-the-minute snapshots of your company's financial health</p>
+    </div>
+    <div class="feature-right">
+      <img src="img/icon-cash-flow-management.svg" class="icons">
+      <h3>Cash Flow Management</h3>
+      <p>Three investment vehicles allow businesses to maximize their market
+      advantage, regardless of treasury experience.</p>
+    </div>
+  </section>
+  <hr />
+  <section class="chart wrapper">
+    <h2>See how much you could earn with Treasure</h2>
+    <div class="cf">
+      <div class="sliders">
+        <form>
+          <div class="inline-field cf">
+            <label for="starting_deposit">Starting Deposit</label>
+            <input type="text" name="starting_deposit" class="starting_deposit_value" value="100,000">
+          </div>
+          <div class="slider">
+            <input type="range" class="starting_deposit_slider" min="5000" max="5000000" step="10000" value="100000">
+          </div>
+          <div class="inline-field cf">
+            <label for="monthly_burn_rate">Monthly Burn Rate</label>
+            <input type="text" class="monthly_burn_rate_value" name="monthly_burn_rate"  class="monthly_burn_rate_value" value="60,000">
+          </div>
+          <div class="slider">
+            <input type="range" class="monthly_burn_rate_slider" min="10000" max="10000000" step="25000" value="60000">
+          </div>
+          <label>How many months of operating capital do you like to have on
+          hand?</label>
+          <div class="input-stepper">
+            <button data-input-stepper-decrease>-</button>
+            <input type="text" value="3" size="2" min="1"><span> Months</span>
+            <button data-input-stepper-increase>+</button>
+          </div>
+        </form>
+      </div><!--.sliders-->
+      <div class="chart">
+        Money Market
+        Other Investments <span>Coming Soon</span>
+        <div id="chart"></div>
+        <div id="d3chart"></div>
+        <div class="legend">
+          <ul>
+            <li id="treasure" ><span class="icon"></span>Treasure<span class="apy">1.15%</span></li>
+            <li id ="community"><span class="icon"></span>Community Banks<span class="apy">0.75%</span></li>
+            <li id="banks"><span class="icon"></span>Institutional Banks<span class="apy">0.25%</span></li>
+          </ul>
+        </div> -->
+      </div><!--.chart-->
+    </div><!--.cf-->
+    <h3>You could be earning up to $1,600* every month with Treasure</h3>
+    <p>*Simulation based on Treasure’s 1.15% annual percentage yield (APY) on investments.</p>
+    <a href="#top" class="button">Sign Up for Early Access</a>
+  </section>
+  <hr />
+  <footer>
+    <div class="wrapper">
+      <div class="right">
+      <div class="social">
+        <a href="#"><img src="img/icons-medium.svg" alt="Treasure's Blog on Medium"></a>
+        <a href="#"><img src="img/icons-angel-list.svg" alt="Treasure on AngelList"></a>
+        <a href="#"><img src="img/icons-linked-in.svg" alt="Treasure on LinkedIn"></a>
+        <a href="#"><img src="img/icons-twitter.svg" alt="Treasure on Twitter"></a>
+      </div>
+      <a href="mailto:founders@treasure.tech">founders@treasure.tech</a>
+      </div><!--.right-->
+      <p>Treasure &copy; 2017 &middot; All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="js/rangeslider.min.js"></script>
+  <script src="js/jquery.input-stepper.js"></script>
+  <script src="js/jquery.mask.min.js"></script>
+  <script src="js/c3.min.js"></script>
+  <script src="https://d3js.org/d3.v3.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
