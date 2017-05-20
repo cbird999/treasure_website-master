@@ -208,7 +208,7 @@ var genData = function() {
 };
  
 var w = 700,
-  h = 400;
+  h = 320;
 var margin = {top: 20, right: 20, bottom: 45, left: 50},
   width = w - margin.left - margin.right,
   height = h - margin.top - margin.bottom;
