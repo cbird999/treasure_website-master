@@ -37,21 +37,19 @@ document.addEventListener('DOMContentLoaded', function(){
 $(function () {
   // Document ready
   $('input[name="starting_deposit"').change(function(event) {
-    var val = $(this).val();
-    val = val.replace(/\,/g, '');
-    val = parseInt(val);
-    variables.sd = val;
+    variables.sd = parseInt($(this).val().replace(',', ''));
+    updateData = genData();
+    drawChart(updateData);
   });
   $('input[name="monthly_burn_rate"').change(function(event) {
-    var val = $(this).val();
-    val = val.replace(/\,/g, '');
-    val = parseInt(val);
-    variables.mbr = val;
-    console.log(variables);
+    variables.mbr = parseInt($(this).val().replace(',', ''));
+    updateData = genData();
+    drawChart(updateData);
   });
   $('.input-stepper input').change(function() {
-    variables.moc = $(this).val();
-    console.log(variables);
+    variables.moc = parseInt($(this).val().replace(',', ''));
+    updateData = genData();
+    drawChart(updateData);
   });
 
   $('input.starting_deposit_slider').rangeslider({
@@ -66,10 +64,10 @@ $(function () {
       drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
-      variables.sd = value;
-      console.log(variables,value);
-      updateData = genData();
-      drawChart(updateData);
+      //variables.sd = value;
+      //console.log(variables,value);
+      //updateData = genData();
+      //drawChart(updateData);
     }
   });
 
@@ -87,9 +85,9 @@ $(function () {
       drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
-      variables.mbr = value;
-      updateData = genData();
-      drawChart(updateData);
+      //variables.mbr = value;
+      //updateData = genData();
+      //(updateData);
     }
   });
 
@@ -149,10 +147,10 @@ $(function () {
 });
 
 var variables = {
-  sd: 1000000,
-  mbr: 60000,
-  moc: 3
-  };
+  sd: parseInt($('input[name="starting_deposit"').val().replace(',', '')),
+  mbr: parseInt($('input[name="monthly_burn_rate"').val().replace(',', '')),
+  moc: parseInt($('.input-stepper input').val().replace(',', ''))
+};
 var rates = {
   treasure: 1.15,
   community: .75,
@@ -176,7 +174,7 @@ for (var i=0; i<72; i++) {
 var financialFunction = function(sd, mbr, moc, rate, i) {
   //return (Math.pow(sd, rate) * i - mbr) ;
   var P = sd,
-    n = 36,
+    n = 72,
     t = i/12,
     r = rate/100,
     body = 1 + r/n,
