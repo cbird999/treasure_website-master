@@ -36,18 +36,25 @@ document.addEventListener('DOMContentLoaded', function(){
 
 $(function () {
   // Document ready
+  // Bind change event to starting deposit text box
   $('input[name="starting_deposit"').change(function(event) {
-    variables.sd = parseInt($(this).val().replace(',', ''));
+    var sdVal = parseInt($(this).val().replace(/,/g, ''));
+    variables.sd = sdVal;
+    $('input.starting_deposit_slider').val(sdVal).change();
     updateData = genData();
     drawChart(updateData);
   });
+  // Bind change event to monthly burn rate text box
   $('input[name="monthly_burn_rate"').change(function(event) {
-    variables.mbr = parseInt($(this).val().replace(',', ''));
+    var mbrVal = parseInt($(this).val().replace(/,/g, ''));
+    variables.mbr = mbrVal;
+    $('input.monthly_burn_rate_slider').val(mbrVal).change();
     updateData = genData();
     drawChart(updateData);
   });
+  // Bind change event to starting 'months of operating capital' text box
   $('.input-stepper input').change(function() {
-    variables.moc = parseInt($(this).val().replace(',', ''));
+    variables.moc = parseInt($(this).val().replace(/,/g, ''));
     updateData = genData();
     drawChart(updateData);
   });
@@ -59,15 +66,12 @@ $(function () {
     },
     onSlide:function(position, value){
       $('.starting_deposit_value').val(addCommas(value));
+      // On slide event, update variables, generate new data, and update chart
       variables.sd = value;
       updateData = genData();
       drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
-      //variables.sd = value;
-      //console.log(variables,value);
-      //updateData = genData();
-      //drawChart(updateData);
     }
   });
 
@@ -80,14 +84,12 @@ $(function () {
       //console.log('onSlide');
       //console.log('position: ' + position, 'value: ' + value);
       $('.monthly_burn_rate_value').val(addCommas(value));
+      // On slide event, update variables, generate new data, and update chart
       variables.mbr = value;
       updateData = genData();
       drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
-      //variables.mbr = value;
-      //updateData = genData();
-      //(updateData);
     }
   });
 
@@ -121,6 +123,12 @@ $(function () {
       }
     }
   });
+  /* 
+  Bind hover events to legend items
+  The first function is bound to start of hover (mousein)
+  The second function is bound to end of hover (mouseout)
+  Adds/removes classes to <li>, <path> and <area> elements
+  */
   $('.legend li').hover( function(e) { 
     thisInst = $(this).attr('id');
     for (var inst in rates) { 
@@ -146,20 +154,25 @@ $(function () {
   });
 });
 
+// The three variable components for the financial model
 var variables = {
-  sd: parseInt($('input[name="starting_deposit"').val().replace(',', '')),
-  mbr: parseInt($('input[name="monthly_burn_rate"').val().replace(',', '')),
-  moc: parseInt($('.input-stepper input').val().replace(',', ''))
+  sd: parseInt($('input[name="starting_deposit"').val().replace(/,/g, '')),
+  mbr: parseInt($('input[name="monthly_burn_rate"').val().replace(/,/g, '')),
+  moc: parseInt($('.input-stepper input').val())
 };
+// The interest rates for the three institutions
 var rates = {
   treasure: 1.15,
   community: .75,
   banks: .25
 };
+// The new data to update the charts, based on user interaction
 var updateData;
 
+// The number of periods to be used in the financial model
+// Also used for building the x-axis
 periods = [];
-for (var i=0; i<72; i++) {
+for (var i=0; i<=72; i++) {
   periods.push(i);
 }
 //console.log(periods);
@@ -171,59 +184,56 @@ for (var i=0; i<72; i++) {
   } 
 }*/
 
+// The function to calculate compounding interest
 var financialFunction = function(sd, mbr, moc, rate, i) {
-  //return (Math.pow(sd, rate) * i - mbr) ;
   var P = sd,
+    C = mbr,
     n = 72,
     t = i/12,
     r = rate/100,
     body = 1 + r/n,
     exponent = n * t;
-  return (P + mbr) * Math.pow(body, exponent);
+  return (P + C) * Math.pow(body, exponent);
 }
 
+/*
+Generate data for the chart based on variables in financial model
+chartdata is an Object in the format:
+{
+'banks': [{'date': d, 'y': y}, {...}], 
+'treasure': [{'date': d, 'y': y}, {...}], 
+'community': [{'date': d, 'y': y}, {...}]
+}
+*/
 var genData = function() {  
-  console.log(variables);
   var chartData = {};
   for (var inst in rates) {
     chartData[inst] = [];
-    var rate = rates[inst],
-      accrued = variables.sd;
+    var rate = rates[inst];
     for (i=0;i<periods.length;i++) {
-      // eventually convert this to date
-      //items.date.push(dateFormat.parse(periods[i]));
-      //var items = {};
-      //items.date = periods[i];
-      //items.y = financialFunction(variables.sd, variables.mbr, variables.moc, rate, i);
-      //items.y = (variables.sd - variables.mbr) * (Math.pow(i,2) * rates[rate]);
       chartData[inst].push({
         date: periods[i],
         y: financialFunction(variables.sd, variables.mbr, variables.moc, rate, i)
       });
-      //console.log(financialFunction(variables.sd, variables.mbr, variables.moc, rate, i));
     }
   };
   return chartData;
 };
- 
+
+// Setup dimensions for the chart
 var w = 700,
   h = 320;
 var margin = {top: 20, right: 20, bottom: 45, left: 50},
   width = w - margin.left - margin.right,
   height = h - margin.top - margin.bottom;
-var dateFormat = d3.time.format('%Y%m');
-
-// Eventually convert this to date scale
-//var x = d3.time.scale()
-//    .range([0, width]);
+// x and y functions return pixel (chart) values for data values
 var x = d3.scale.linear()
   .range([0, width])
   .nice();
-
 var y = d3.scale.linear()
   .range([height, 0])
   .nice();
-
+// xAxis and yAxis create axes on the chart
 var xAxis = d3.svg.axis()
   .scale(x)
   .orient('bottom')
@@ -245,28 +255,27 @@ var xAxis = d3.svg.axis()
       default: return;
     }
   });
-
 var yAxis = d3.svg.axis()
   .scale(y)
   .orient('right');
-
+// area function create areal fill under the line
 var area = d3.svg.area()
   .interpolate("basis") 
   .x(function(d) { return x(d.date); })
   .y0(height)
   .y1(function(d) { return y(d.y); });
-
+// line function draws line for each institution
 var line = d3.svg.line()
   .interpolate("basis") 
   .x(function(d) { return x(d.date); })
   .y(function(d) { return y(d.y); });
-
+// initialize SVG element to hold chart
 var svg = d3.select('#d3chart').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+// create a grouping for the x axis
 svg.append('g')
   .attr('class', 'x axis')
   .attr('transform', 'translate(0,' + height + ')')
@@ -279,25 +288,25 @@ d3.selectAll('.x.axis g.tick')
   .filter(function(d){ return d==0.3 || d == 0.6;} )
   .select('text')
   .style('text-anchor', 'start');
-
+// create a grouping for the y axis
 svg.append('g')
   .attr('class', 'y axis')
   .attr('transform', 'translate(' + width + ',0)')
   .call(yAxis);
-
+// create groupings for area and line paths for each institution
 var areaPaths = {},
   linePaths = {};
-
 for (inst in rates) {
   areaPaths[inst] = svg.append('g').attr('class', 'area-path ' + inst);
   linePaths[inst] = svg.append('g').attr('class', 'line-path ' + inst);
 }
+// create groupings for endpoints and text labels on x axis
 var endpoints = svg.append('g')
   .attr('class', 'endpoints');
-
 var text = svg.append('g')
   .attr('class', 'text-labels');
-
+// function to compute the initial and updated domain limits for the chart
+// this changes as the data changes
 var setDomainLimits = function(dl) {
   var domainLimits = {
     min_x: 300012,
@@ -310,11 +319,11 @@ var setDomainLimits = function(dl) {
     var dateArray = dl[inst].map(function(e) {
       return parseInt(e.date);
     });
-    console.log(dateArray);
+    //console.log('date array:', dateArray);
     var yArray = dl[inst].map(function(e) {
       return e.y;
     });
-    console.log(yArray);
+    //console.log(yArray);
     var thisDateMin = Math.min.apply(null,dateArray),
       thisDateMax = Math.max.apply(null,dateArray),
       thisYMin = Math.min.apply(null,yArray),
@@ -333,12 +342,12 @@ var setDomainLimits = function(dl) {
       domainLimits.max_y = thisYMax;
     }
   };
-  console.log(domainLimits);
+  //console.log(domainLimits);
   x.domain([domainLimits.min_x, domainLimits.max_x]);
   y.domain([domainLimits.min_y, domainLimits.max_y]);
 }
 
-
+// single function to draw initial chart and update as the data changes
 var drawChart = function(chartData) {
   setDomainLimits(chartData);
   var maxPoints = [];
@@ -362,11 +371,6 @@ var drawChart = function(chartData) {
         .attr('d', area);
       ap.exit().remove();
 
-      /*svg.append('path')
-        .data([d])
-        .attr('class', function(d) { return 'area ' + inst; })
-        .attr('d', area); */
-
       lp = linePaths[inst].selectAll('path').data([d]);
       lp
         .attr('class', function(d) { return 'line ' + inst; })
@@ -376,34 +380,9 @@ var drawChart = function(chartData) {
         .attr('class', function(d) { return 'line ' + inst; })
         .attr('d', line);
       lp.exit().remove();
-
-      /*svg.append('path')
-        .data([d])
-        .attr('class', function(d) { return 'line ' + inst; })
-        .attr('d', line);*/
-
-      /*svg.selectAll('.circle')
-        .data(d)
-        .enter().append('circle')
-        .attr('class', function(d) { return 'endpoint_' + inst; })
-        .attr('cx', function(d,i) { if (i == lastIndex) { return x(d.date); } else return; })
-        .attr('cy', function(d,i) { if (i == lastIndex) { return y(d.y); } else return; })
-        .attr('r', function(d,i) { if (i == lastIndex) { return 6; } else return 0; })
-
-      var text = svg.selectAll('circle')
-        .data(d)
-        .enter()
-        .append('text');
-      var textLabels = text
-        .attr('x', function(d,i) { if (i == lastIndex) { return x(d.date) - 10; } else return; })
-        .attr('y', function(d,i) { if (i == lastIndex) { return y(d.y); } else return; })
-        .attr('text-anchor', 'end')
-        .text( function (d,i) { if (i == lastIndex) { return '$' + addCommas(parseInt(d.y)); } else return; }); */
     }
   }
-  console.log(maxPoints);
-  //var endpoints = svg.append('g')
-    //.attr('class', 'endpoints')
+  //console.log(maxPoints);
   ep  = endpoints.selectAll('.endpoint').data(maxPoints);
   ep
     .attr('class', function(d) { return 'endpoint ' + d.inst; })
@@ -434,68 +413,15 @@ var drawChart = function(chartData) {
     .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t.exit().remove();
 
-  /*var textLabels = text
-    .attr('x', function(d,i) { return x(d.date) - 10; })
-    .attr('y', function(d,i) { return y(d.y); })
-    .attr('text-anchor', 'end')
-    .text( function (d,i) { return '$' + addCommas(parseInt(d.y)); }); */
-  // Remove y axis ticks
+  // Remove x and y axis ticks
   d3.selectAll('.y.axis .tick').remove();
   d3.selectAll('.x.axis .tick line').remove();
 };
 
-var updateChart = function(updateData) {
-  console.log('calling updatechart');
-  setDomainLimits(updateData);
-  for (var inst in updateData) {
-    var lastIndex = updateData[inst].length - 1;
-    console.log(inst,lastIndex);
-    //for (var i in d) { d[i].y = d[i].y * 1.1; };
-
-    if (inst != 'banks1111') {
-      //svg.selectAll('path.area.' + inst).remove();
-      /*var areas = svg.select('path.area.' + inst);
-      areas
-        .data([d])
-        .attr('d', area);*/
-      //console.log(areas);
-      /*svg.append('path')
-        .data([d])
-        .attr('class', function(d) { return 'area ' + inst; })
-        .attr('d', area);*/
-
-      //svg.selectAll('path.line.' + inst).remove();
-      var lines = svg.select('path.line.' + inst);
-      lines
-        .data([updateData[inst]])
-        .attr('d', line);
-      /*svg.append('path')
-        .data([d])
-        .attr('class', function(d) { return 'line ' + inst; })
-        .attr('d', line);*/
-
-      //svg.selectAll('.endpoint_' + inst).remove();
-      svg.selectAll('.endpoint_' + inst)
-        .data(updateData[inst])
-        .attr('cx', function(d,i) { if (i == lastIndex) { return x(d.date); } else return; })
-        .attr('cy', function(d,i) { if (i == lastIndex) { return y(d.y); } else return; })
-        .attr('r', function(d,i) { if (i == lastIndex) { return 6; } else return 0; })
-      /*svg.selectAll('.dot')
-        .data(d)
-        .enter().append('circle')
-        .attr('class', function(d) { return 'endpoint_' + inst; })
-        .attr('cx', function(d,i) { if (i == lastIndex) { return x(d.date); } else return; })
-        .attr('cy', function(d,i) { if (i == lastIndex) { return y(d.y); } else return; })
-        .attr('r', function(d,i) { if (i == lastIndex) { return 6; } else return 0; })*/
-    }
-  };
-};
-
 var data = genData();
-//console.log(data);
 drawChart(data); 
 
-var chart;
+/*var chart;
 chart = c3.generate({
   bindto: '#chart',
   data: {
@@ -535,7 +461,7 @@ chart = c3.generate({
   padding: {
     bottom: 20
   }
-});
+}); */
 
 $(function () {
   $('#subForm').submit(function (e) {
