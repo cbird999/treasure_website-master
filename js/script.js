@@ -360,27 +360,25 @@ var drawChart = function(chartData) {
       y: d[d.length - 1].y
     });
 
-    if (inst != 'banks111') {
-      ap = areaPaths[inst].selectAll('path').data([d]);
-      ap
-        .attr('class', function(d) { return 'area ' + inst; })
-        .attr('d', area);
-      ap.enter()
-        .append('path')
-        .attr('class', function(d) { return 'area ' + inst; })
-        .attr('d', area);
-      ap.exit().remove();
+    ap = areaPaths[inst].selectAll('path').data([d]);
+    ap
+      .attr('class', function(d) { return 'area ' + inst; })
+      .attr('d', area);
+    ap.enter()
+      .append('path')
+      .attr('class', function(d) { return 'area ' + inst; })
+      .attr('d', area);
+    ap.exit().remove();
 
-      lp = linePaths[inst].selectAll('path').data([d]);
-      lp
-        .attr('class', function(d) { return 'line ' + inst; })
-        .attr('d', line);
-      lp.enter()
-        .append('path')
-        .attr('class', function(d) { return 'line ' + inst; })
-        .attr('d', line);
-      lp.exit().remove();
-    }
+    lp = linePaths[inst].selectAll('path').data([d]);
+    lp
+      .attr('class', function(d) { return 'line ' + inst; })
+      .attr('d', line);
+    lp.enter()
+      .append('path')
+      .attr('class', function(d) { return 'line ' + inst; })
+      .attr('d', line);
+    lp.exit().remove();
   }
   //console.log(maxPoints);
   ep  = endpoints.selectAll('.endpoint').data(maxPoints);

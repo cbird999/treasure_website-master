@@ -61,16 +61,14 @@
     }
     circle {
       fill: indianred;
-    }
-    circle.endpoint_community {
-
+      fill-opacity: .8;
     }
     .text-labels text {
       font-size: .9em;
       fill: #555;
     }
     .legend {
-      margin-left: 50px;
+      margin-left: 10em;
     }
     .legend ul {
       list-style: none;
@@ -79,12 +77,14 @@
       display: inline;
       font-size: .8em;
       line-height: .8em;
+      position: relative;
+      margin-right: 2.5em;
     }
     .legend .icon {
       display: inline-block;
       width: 1em;
       height: .4em;
-      margin-right: 3px;
+      margin-right: .1em;
     }
     .legend #treasure .icon {
       border-top: 3px solid #00c6f8;
@@ -94,6 +94,11 @@
     }
     .legend #banks .icon {
       border-top: 3px dotted #a9beee;
+    }
+    span.apy {
+      position: absolute;
+      top: 1.3em;
+      left: 35%;
     }
     .dim-text {
       opacity: .5;
