@@ -63,15 +63,13 @@ $(function () {
       $('.starting_deposit_value').val(addCommas(value));
       variables.sd = value;
       updateData = genData();
-      makeChart(updateData);
+      drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
       variables.sd = value;
       console.log(variables,value);
       updateData = genData();
-      //console.log(data);
-      //updateChart(updateData);
-      makeChart(updateData);
+      drawChart(updateData);
     }
   });
 
@@ -84,11 +82,14 @@ $(function () {
       //console.log('onSlide');
       //console.log('position: ' + position, 'value: ' + value);
       $('.monthly_burn_rate_value').val(addCommas(value));
+      variables.mbr = value;
+      updateData = genData();
+      drawChart(updateData);
     },
     onSlideEnd: function(position, value) {
       variables.mbr = value;
       updateData = genData();
-      updateChart(updateData);
+      drawChart(updateData);
     }
   });
 
@@ -160,7 +161,7 @@ var rates = {
 var updateData;
 
 periods = [];
-for (var i=0; i<36; i++) {
+for (var i=0; i<72; i++) {
   periods.push(i);
 }
 //console.log(periods);
@@ -180,7 +181,7 @@ var financialFunction = function(sd, mbr, moc, rate, i) {
     r = rate/100,
     body = 1 + r/n,
     exponent = n * t;
-  return P * Math.pow(body, exponent);
+  return (P + mbr) * Math.pow(body, exponent);
 }
 
 var genData = function() {  
@@ -340,7 +341,7 @@ var setDomainLimits = function(dl) {
 }
 
 
-var makeChart = function(chartData) {
+var drawChart = function(chartData) {
   setDomainLimits(chartData);
   var maxPoints = [];
   for (var inst in chartData) {
@@ -425,14 +426,14 @@ var makeChart = function(chartData) {
     .attr('x', function(d,i) { return x(d.date) - 10; })
     .attr('y', function(d,i) { return y(d.y); })
     .attr('text-anchor', 'end')
-    .text( function (d,i) { return '$' + addCommas(parseInt(d.y)); });
+    .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t
     .enter()
     .append('text')
     .attr('x', function(d,i) { return x(d.date) - 10; })
     .attr('y', function(d,i) { return y(d.y); })
     .attr('text-anchor', 'end')
-    .text( function (d,i) { return '$' + addCommas(parseInt(d.y)); });
+    .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t.exit().remove();
 
   /*var textLabels = text
@@ -494,7 +495,7 @@ var updateChart = function(updateData) {
 
 var data = genData();
 //console.log(data);
-makeChart(data); 
+drawChart(data); 
 
 var chart;
 chart = c3.generate({
