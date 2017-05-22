@@ -194,7 +194,7 @@ var financialFunction = function(sd, mbr, moc, rate, i) {
     body = 1 + r/n,
     exponent = n * t;
   //return P + Math.pow(P, rate*i/72);)
-  console.log('i:', i, 'body:', body, 'exponent:', exponent, 'right:', Math.pow(body, exponent));
+  //console.log('i:', i, 'body:', body, 'exponent:', exponent, 'right:', Math.pow(body, exponent));
   return (P + C) * Math.pow(body, exponent);
 }
 
@@ -223,11 +223,28 @@ var genData = function() {
 };
 
 // Setup dimensions for the chart
-var w = 700, //100%
+var w = parseInt(d3.select('div.chart').style('width'), 10), //700, //100%
   h = 320;    //320px
 var margin = {top: 20, right: 100, bottom: 45, left: 50},
   width = w - margin.left - margin.right,
   height = h - margin.top - margin.bottom;
+// make chart responsive
+d3.select(window).on('resize', resize); 
+function resize() {
+  // update width
+  w = parseInt(d3.select('div.chart').style('width'), 10);
+  width = w - margin.left - margin.right;
+  console.log(w,width);
+  // resize the chart
+  x.range([0, width]);
+  d3.select(chart.node().parentNode)
+    .style('width', (width + margin.left + margin.right) + 'px');
+  //x_axis.call(xAxis);
+  //repositionXAxisLabels();
+  drawChart(updateData);
+  
+  //d3.select('.x.axis').call(xAxis);
+}
 // x and y functions return pixel (chart) values for data values
 var x = d3.scale.linear()
   .range([0, width])
@@ -239,19 +256,21 @@ var y = d3.scale.linear()
 var xAxis = d3.svg.axis()
   .scale(x)
   .orient('bottom')
+  //.ticks(4)
+  //.tickValues([0,.33,.66,1])
   .tickFormat(function(d, i) {
-    console.log("x axis tick:", d);
+    console.log("x axis tick:", d, i);
     switch(d) {
       case 0: 
         return 'Today';
         break;
-      case 0.3: 
+      case .3:
         return'Two Years';
         break;
-      case 0.6: 
+      case .6:
         return'Four Years';
         break;
-      case 1: 
+      case 1:
         return'Six Years';
         break;
       default: return;
@@ -272,13 +291,13 @@ var line = d3.svg.line()
   .x(function(d) { return x(d.date); })
   .y(function(d) { return y(d.y); });
 // initialize SVG element to hold chart
-var svg = d3.select('#d3chart').append('svg')
+var chart = d3.select('#d3chart').append('svg')
   .attr('width', width + margin.left + margin.right)
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 //
-var svgDefs = svg.append('defs');
+var svgDefs = chart.append('defs');
 var treasureGradient = svgDefs.append('linearGradient')
   .attr('id', 'treasure-gradient')
 treasureGradient
@@ -309,23 +328,34 @@ institutionalGradient
   .append('stop')
   .attr('class', 'institutional-stop-right')
   .attr('offset', '100%');
-//
-svg
+/*
+Reposition the xAxis labels manually
+*/
+function repositionXAxisLabels() {
+  d3.selectAll('.x.axis g.tick')
+    .filter(function(d){ return d==1 || d==30 ||d==70;} )
+    .select('text')
+    .style('text-anchor', 'end');
+  d3.selectAll('.x.axis g.tick')
+    .filter(function(d){ return d==0 || d==1 || d==70;} )
+    .select('text')
+    .style('text-anchor', 'middle');
+  d3.selectAll('.x.axis g.tick')
+    .filter(function(d){ return d==0.3 || d==0.6} )
+    .select('text')
+    .style('text-anchor', 'start');
+  d3.selectAll('.x.axis g.tick')
+    .filter(function(d){ return d==50;} )
+    .select('text')
+    .style('text-anchor', 'middle');
+}
 // create a grouping for the x axis
-svg.append('g')
+var x_axis = chart.append('g')
   .attr('class', 'x axis')
   .attr('transform', 'translate(0,' + height + ')')
   .call(xAxis);
-d3.selectAll('.x.axis g.tick')
-  .filter(function(d){ return d==0 || d == 1;} )
-  .select('text')
-  .style('text-anchor', 'end');
-d3.selectAll('.x.axis g.tick')
-  .filter(function(d){ return d==0.3 || d == 0.6;} )
-  .select('text')
-  .style('text-anchor', 'start');
 // create a grouping for the y axis
-svg.append('g')
+var y_axis = chart.append('g')
   .attr('class', 'y axis')
   .attr('transform', 'translate(' + width + ',0)')
   .call(yAxis);
@@ -333,13 +363,13 @@ svg.append('g')
 var areaPaths = {},
   linePaths = {};
 for (inst in rates) {
-  areaPaths[inst] = svg.append('g').attr('class', 'area-path ' + inst);
-  linePaths[inst] = svg.append('g').attr('class', 'line-path ' + inst);
+  areaPaths[inst] = chart.append('g').attr('class', 'area-path ' + inst);
+  linePaths[inst] = chart.append('g').attr('class', 'line-path ' + inst);
 }
 // create groupings for endpoints and text labels on x axis
-var endpoints = svg.append('g')
+var endpoints = chart.append('g')
   .attr('class', 'endpoints');
-var text = svg.append('g')
+var text = chart.append('g')
   .attr('class', 'text-labels');
 // function to compute the initial and updated domain limits for the chart
 // this changes as the data changes
