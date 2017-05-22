@@ -380,7 +380,8 @@ var setDomainLimits = function(dl) {
   };
   //console.log(domainLimits);
   x.domain([domainLimits.min_x, domainLimits.max_x]);
-  y.domain([domainLimits.min_y, domainLimits.max_y]);
+  //y.domain([domainLimits.min_y, 6000000]);
+  y.domain([domainLimits.min_y, domainLimits.max_y + 50000]);
 }
 
 // single function to draw initial chart and update as the data changes
