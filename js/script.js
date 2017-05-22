@@ -164,7 +164,7 @@ var variables = {
 var rates = {
   treasure: 1.15,
   community: .75,
-  banks: .25
+  insitutional: .25
 };
 // The new data to update the charts, based on user interaction
 var updateData;
@@ -172,7 +172,7 @@ var updateData;
 // The number of periods to be used in the financial model
 // Also used for building the x-axis
 periods = [];
-for (var i=0; i<=360; i++) {
+for (var i=0; i<=72; i++) {
   periods.push(i);
 }
 //console.log(periods);
@@ -202,7 +202,7 @@ var financialFunction = function(sd, mbr, moc, rate, i) {
 Generate data for the chart based on variables in financial model
 chartdata is an Object in the format:
 {
-'banks': [{'date': d, 'y': y}, {...}], 
+'insitutional': [{'date': d, 'y': y}, {...}], 
 'treasure': [{'date': d, 'y': y}, {...}], 
 'community': [{'date': d, 'y': y}, {...}]
 }
@@ -223,9 +223,9 @@ var genData = function() {
 };
 
 // Setup dimensions for the chart
-var w = 700,
-  h = 320;
-var margin = {top: 20, right: 20, bottom: 45, left: 50},
+var w = 700, //100%
+  h = 320;    //320px
+var margin = {top: 20, right: 100, bottom: 45, left: 50},
   width = w - margin.left - margin.right,
   height = h - margin.top - margin.bottom;
 // x and y functions return pixel (chart) values for data values
@@ -240,19 +240,19 @@ var xAxis = d3.svg.axis()
   .scale(x)
   .orient('bottom')
   .tickFormat(function(d, i) {
-    //console.log("x axis tick:", d);
+    console.log("x axis tick:", d);
     switch(d) {
       case 0: 
         return 'Today';
         break;
       case 0.3: 
-        return'One Year';
-        break;
-      case 0.6: 
         return'Two Years';
         break;
+      case 0.6: 
+        return'Four Years';
+        break;
       case 1: 
-        return'Three Years';
+        return'Six Years';
         break;
       default: return;
     }
@@ -277,6 +277,40 @@ var svg = d3.select('#d3chart').append('svg')
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+//
+var svgDefs = svg.append('defs');
+var treasureGradient = svgDefs.append('linearGradient')
+  .attr('id', 'treasure-gradient')
+treasureGradient
+  .append('stop')
+  .attr('class', 'treasure-stop-left')
+  .attr('offset', '0%');
+treasureGradient
+  .append('stop')
+  .attr('class', 'treasure-stop-right')
+  .attr('offset', '100%');
+var communityGradient = svgDefs.append('linearGradient')
+  .attr('id', 'community-gradient')
+communityGradient
+  .append('stop')
+  .attr('class', 'community-stop-left')
+  .attr('offset', '0%');
+communityGradient
+  .append('stop')
+  .attr('class', 'community-stop-right')
+  .attr('offset', '100%');
+var institutionalGradient = svgDefs.append('linearGradient')
+  .attr('id', 'institutional-gradient')
+institutionalGradient
+  .append('stop')
+  .attr('class', 'institutional-stop-left')
+  .attr('offset', '0%');
+institutionalGradient
+  .append('stop')
+  .attr('class', 'institutional-stop-right')
+  .attr('offset', '100%');
+//
+svg
 // create a grouping for the x axis
 svg.append('g')
   .attr('class', 'x axis')
@@ -400,16 +434,16 @@ var drawChart = function(chartData) {
 
   t = text.selectAll('text').data(maxPoints);
   t
-    .attr('x', function(d,i) { return x(d.date) - 10; })
+    .attr('x', function(d,i) { return x(d.date) + 10; })
     .attr('y', function(d,i) { return y(d.y); })
-    .attr('text-anchor', 'end')
+    //.attr('text-anchor', 'end')
     .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t
     .enter()
     .append('text')
-    .attr('x', function(d,i) { return x(d.date) - 10; })
+    .attr('x', function(d,i) { return x(d.date) + 10; })
     .attr('y', function(d,i) { return y(d.y); })
-    .attr('text-anchor', 'end')
+    //.attr('text-anchor', 'end')
     .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t.exit().remove();
 

@@ -20,6 +20,9 @@
       stroke: #ddd;
       shape-rendering: crispEdges;
     }
+    path.domain {
+      display: none;
+    }
     .x.axis .tick text {
       fill: #888;
       font-size: .8em;
@@ -31,7 +34,7 @@
       fill: none;
       stroke: #00c6f8;
     }
-    .line.banks {
+    .line.insitutional {
       fill: none;
       stroke: #a9beee;
       stroke-dasharray: 5;
@@ -44,18 +47,36 @@
     .area {
       fill-opacity: .3;
     }
+    .treasure-stop-left {
+      stop-color: #fff;
+    }
+    .treasure-stop-right {
+      stop-color: #00c6f8;
+    }
+    .institutional-stop-left {
+      stop-color: #fff;
+    }
+    .institutional-stop-right {
+      stop-color: #a9beee;
+    }
+    .community-stop-left {
+      stop-color: #fff;
+    }
+    .community-stop-right {
+      stop-color: #7ee4ed;
+    }
     .area.treasure {
-      fill: #00c6f8;
+      fill: url('#treasure-gradient');
       stroke: #00c6f8;
       stroke-width: 0;
     }
-    .area.banks {
-      fill: #a9beee;
+    .area.insitutional {
+      fill: url('#institutional-gradient');
       stroke: #a9beee;
       stroke-width: 0;
     }
     .area.community {
-      fill: #7ee4ed;
+      fill: url('#community-gradient');
       stroke: #7ee4ed;
       stroke-width: 0;
     }
@@ -66,6 +87,7 @@
     .text-labels text {
       font-size: .9em;
       fill: #555;
+      text-anchor: start;
     }
     .legend {
       margin-left: 10em;
@@ -92,7 +114,7 @@
     .legend #community .icon {
       border-top: 3px dashed #7ee4ed;
     }
-    .legend #banks .icon {
+    .legend #insitutional .icon {
       border-top: 3px dotted #a9beee;
     }
     span.apy {
@@ -196,7 +218,7 @@
           <ul>
             <li id="treasure" ><span class="icon"></span>Treasure<span class="apy">1.15%</span></li>
             <li id ="community"><span class="icon"></span>Community Banks<span class="apy">0.75%</span></li>
-            <li id="banks"><span class="icon"></span>Institutional Banks<span class="apy">0.25%</span></li>
+            <li id="insitutional"><span class="icon"></span>Institutional Banks<span class="apy">0.25%</span></li>
           </ul>
         </div> -->
       </div><!--.chart-->
