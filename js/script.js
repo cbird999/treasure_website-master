@@ -435,14 +435,14 @@ var drawChart = function(chartData) {
   t = text.selectAll('text').data(maxPoints);
   t
     .attr('x', function(d,i) { return x(d.date) + 10; })
-    .attr('y', function(d,i) { return y(d.y); })
+    .attr('y', function(d,i) { return y(d.y) + 4; })
     //.attr('text-anchor', 'end')
     .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t
     .enter()
     .append('text')
     .attr('x', function(d,i) { return x(d.date) + 10; })
-    .attr('y', function(d,i) { return y(d.y); })
+    .attr('y', function(d,i) { return y(d.y) + 4; })
     //.attr('text-anchor', 'end')
     .text( function (d,i) { return '$' + parseInt(d.y).toLocaleString(); });
   t.exit().remove();
