@@ -156,8 +156,8 @@ $(function () {
 
 // The three variable components for the financial model
 var variables = {
-  sd: parseInt($('input[name="starting_deposit"').val().replace(/,/g, '')),
-  mbr: parseInt($('input[name="monthly_burn_rate"').val().replace(/,/g, '')),
+  sd: parseInt($('input[name="starting_deposit"]').val().replace(/,/g, '')),
+  mbr: parseInt($('input[name="monthly_burn_rate"]').val().replace(/,/g, '')),
   moc: parseInt($('.input-stepper input').val())
 };
 // The interest rates for the three institutions
