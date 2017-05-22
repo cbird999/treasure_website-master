@@ -193,6 +193,8 @@ var financialFunction = function(sd, mbr, moc, rate, i) {
     r = rate/100,
     body = 1 + r/n,
     exponent = n * t;
+  //return P + Math.pow(P, rate*i/72);)
+  console.log('i:', i, 'body:', body, 'exponent:', exponent, 'right:', Math.pow(body, exponent));
   return (P + C) * Math.pow(body, exponent);
 }
 
