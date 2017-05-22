@@ -172,7 +172,7 @@ var updateData;
 // The number of periods to be used in the financial model
 // Also used for building the x-axis
 periods = [];
-for (var i=0; i<=72; i++) {
+for (var i=0; i<=360; i++) {
   periods.push(i);
 }
 //console.log(periods);
@@ -188,7 +188,7 @@ for (var i=0; i<=72; i++) {
 var financialFunction = function(sd, mbr, moc, rate, i) {
   var P = sd,
     C = mbr,
-    n = 72,
+    n = 360,
     t = i/12,
     r = rate/100,
     body = 1 + r/n,
