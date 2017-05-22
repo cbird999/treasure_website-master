@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function(){
 $(function () {
   // Document ready
   // Bind change event to starting deposit text box
-  $('input[name="starting_deposit"').change(function(event) {
+  $('input[name="starting_deposit"]').change(function(event) {
     var sdVal = parseInt($(this).val().replace(/,/g, ''));
     variables.sd = sdVal;
     $('input.starting_deposit_slider').val(sdVal).change();
@@ -45,7 +45,7 @@ $(function () {
     drawChart(updateData);
   });
   // Bind change event to monthly burn rate text box
-  $('input[name="monthly_burn_rate"').change(function(event) {
+  $('input[name="monthly_burn_rate"]').change(function(event) {
     var mbrVal = parseInt($(this).val().replace(/,/g, ''));
     variables.mbr = mbrVal;
     $('input.monthly_burn_rate_slider').val(mbrVal).change();
