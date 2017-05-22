@@ -504,6 +504,7 @@ var drawChart = function(chartData) {
   // Remove x and y axis ticks
   d3.selectAll('.y.axis .tick').remove();
   d3.selectAll('.x.axis .tick line').remove();
+  repositionXAxisLabels();
 };
 
 var data = genData();
