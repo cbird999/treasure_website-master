@@ -34,15 +34,15 @@
       fill: none;
       stroke: #00c6f8;
     }
-    .line.insitutional {
-      fill: none;
-      stroke: #a9beee;
-      stroke-dasharray: 5;
-    }
     .line.community {
       fill: none;
       stroke: #7ee4ed;
       stroke-dasharray: 15;
+    }
+    .line.insitutional {
+      fill: none;
+      stroke: #a9beee;
+      stroke-dasharray: 5;
     }
     .area {
       fill-opacity: .3;
@@ -53,32 +53,35 @@
     .treasure-stop-right {
       stop-color: #00c6f8;
     }
-    .institutional-stop-left {
-      stop-color: #fff;
-    }
-    .institutional-stop-right {
-      stop-color: #a9beee;
-    }
     .community-stop-left {
-      stop-color: #fff;
+      stop-color: IndianRed; /*#fff; */
     }
     .community-stop-right {
-      stop-color: #7ee4ed;
+      stop-color: DarkRed; /*red; /*#7ee4ed;*/
+    }
+    .institutional-stop-left {
+      stop-color: LightYellow; /*#fff;*/
+    }
+    .institutional-stop-right {
+      stop-color: Gold; /*yellow; /*#a9beee;*/
     }
     .area.treasure {
       fill: url('#treasure-gradient');
       stroke: #00c6f8;
       stroke-width: 0;
-    }
-    .area.insitutional {
-      fill: url('#institutional-gradient');
-      stroke: #a9beee;
-      stroke-width: 0;
+      fill-opacity: .3;
     }
     .area.community {
       fill: url('#community-gradient');
       stroke: #7ee4ed;
       stroke-width: 0;
+      fill-opacity: .6;
+    }
+    .area.insitutional {
+      fill: url('#institutional-gradient');
+      stroke: #a9beee;
+      stroke-width: 0;
+      fill-opacity: .8;
     }
     circle {
       fill: indianred;
@@ -129,7 +132,7 @@
       opacity: .5;
     }
     .area.dim-area {
-      fill-opacity: .1;
+      fill-opacity: .01;
     }
     .line.dim-line {
       stroke-width: 1;

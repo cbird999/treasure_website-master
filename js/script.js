@@ -300,6 +300,11 @@ var chart = d3.select('#d3chart').append('svg')
 var svgDefs = chart.append('defs');
 var treasureGradient = svgDefs.append('linearGradient')
   .attr('id', 'treasure-gradient')
+  .attr('gradientUnits', 'userSpaceOnUse')
+  .attr('x1', x(x.domain()[1]))
+  .attr('x2', x(x.domain()[1]))
+  //.attr('y1', y(maxPoints[0].y))
+  .attr('y1', y(y.domain()[0]));
 treasureGradient
   .append('stop')
   .attr('class', 'treasure-stop-left')
@@ -307,9 +312,14 @@ treasureGradient
 treasureGradient
   .append('stop')
   .attr('class', 'treasure-stop-right')
-  .attr('offset', '100%');
+  .attr('offset', '90%');
 var communityGradient = svgDefs.append('linearGradient')
   .attr('id', 'community-gradient')
+  .attr('gradientUnits', 'userSpaceOnUse')
+  .attr('x1', x(x.domain()[1]))
+  .attr('x2', x(x.domain()[1]))
+  //.attr('y1', y(maxPoints[1].y))
+  .attr('y1', y(y.domain()[0]));
 communityGradient
   .append('stop')
   .attr('class', 'community-stop-left')
@@ -317,9 +327,14 @@ communityGradient
 communityGradient
   .append('stop')
   .attr('class', 'community-stop-right')
-  .attr('offset', '100%');
+  .attr('offset', '90%');
 var institutionalGradient = svgDefs.append('linearGradient')
   .attr('id', 'institutional-gradient')
+  .attr('gradientUnits', 'userSpaceOnUse')
+  .attr('x1', x(x.domain()[1]))
+  .attr('x2', x(x.domain()[1]))
+  //.attr('y1', y(maxPoints[2].y))
+  .attr('y1', y(y.domain()[0]));
 institutionalGradient
   .append('stop')
   .attr('class', 'institutional-stop-left')
@@ -327,7 +342,7 @@ institutionalGradient
 institutionalGradient
   .append('stop')
   .attr('class', 'institutional-stop-right')
-  .attr('offset', '100%');
+  .attr('offset', '90%');
 /*
 Reposition the xAxis labels manually
 */
@@ -414,10 +429,11 @@ var setDomainLimits = function(dl) {
   y.domain([domainLimits.min_y, domainLimits.max_y + 50000]);
 }
 
+var maxPoints;
 // single function to draw initial chart and update as the data changes
 var drawChart = function(chartData) {
   setDomainLimits(chartData);
-  var maxPoints = [];
+  maxPoints = [];
   for (var inst in chartData) {
     var d = chartData[inst],
       lastIndex = d.length - 1;
@@ -426,6 +442,13 @@ var drawChart = function(chartData) {
       date: d[d.length - 1].date,
       y: d[d.length - 1].y
     });
+    if (inst == 'treasure') {
+      treasureGradient.attr('y2', y(maxPoints[0].y))
+    } else if (inst == 'community') {
+      communityGradient.attr('y2', y(maxPoints[1].y))
+    } else {
+      institutionalGradient.attr('y2', y(maxPoints[2].y))
+    }
 
     ap = areaPaths[inst].selectAll('path').data([d]);
     ap
