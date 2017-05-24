@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function(){
     .orient('bottom')
     .tickValues([0,.33,.66,1])
     .tickFormat(function(d, i) {
-      console.log("x axis tick:", d, i);
+      //console.log("x axis tick:", d, i);
       switch(d) {
         case 0: 
           return 'Today';
@@ -253,13 +253,13 @@ document.addEventListener('DOMContentLoaded', function(){
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.y); });
   // initialize SVG  and G elements as chart containers
-  var chart = d3.select('#d3chart').append('svg')
+  var svg = d3.select('#d3chart').append('svg')
     .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .append('g')
+    .attr('height', height + margin.top + margin.bottom);
+  chart = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
   // add SVG definitions for linear gradient shading
-  var svgDefs = chart.append('defs');
+  var svgDefs = svg.append('defs');
   var treasureGradient = svgDefs.append('linearGradient')
     .attr('id', 'treasure-gradient')
     .attr('gradientUnits', 'userSpaceOnUse')
@@ -463,11 +463,24 @@ document.addEventListener('DOMContentLoaded', function(){
   // resize the chart when window is resized
   function resize() {
     // update width
-    w = parseInt(d3.select('div.chart').style('width'), 10);
+    var w = parseInt(d3.select('div.chart').style('width'), 10);
+      //h = 320; //parseInt(d3.select('div.chart').style('height'), 10);
     width = w - margin.left - margin.right;
+    //height = h - margin.top - margin.bottom;
     // resize the chart
     d3.select(chart.node().parentNode)
-      .style('width', (width + margin.left + margin.right) + 'px');
+      .attr('width', width + margin.left + margin.right);
+      //.attr('height', height + margin.top + margin.bottom);
+    //x.range([0, width]);
+    //y.range([height, 0]);
+    //chart.select('.x.axis')
+      //.attr("transform", "translate(0," + height + ")")
+      //.call(xAxis);
+    //xAxis
+    //  .scale(x)
+    //  .tickValues([0,.33,.66,1]);
+    //chart.select('.y.axis')
+    //  .call(yAxis);
     // redraw the chart
     drawChart(updateData);
   }
