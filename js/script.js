@@ -218,25 +218,31 @@ document.addEventListener('DOMContentLoaded', function(){
   // xAxis and yAxis create axes on the chart
   var xAxis = d3.svg.axis()
     .scale(x)
-    .orient('bottom')
-    .tickValues([0,.33,.66,1])
+    .orient(function(d, i) {
+      console.log("x axis tick:", d, i);
+      return 'bottom';
+    })
+    //.tickValues([0,.33,.66,1])
     .tickFormat(function(d, i) {
-      //console.log("x axis tick:", d, i);
+      console.log("x axis tick:", d, i);
       switch(d) {
         case 0: 
           return 'Today';
           break;
-        case .33:
+        case .3:
+        case 30:
           return'Two Years';
           break;
-        case .66:
+        case .6:
+        case 50:
           return'Four Years';
           break;
         case 1:
+        case 70:
           return'Six Years';
           break;
         default: return;
-      }
+      } 
     });
   var yAxis = d3.svg.axis()
     .scale(y)
@@ -412,6 +418,22 @@ document.addEventListener('DOMContentLoaded', function(){
     // Remove x and y axis ticks
     d3.selectAll('.y.axis .tick').remove();
     d3.selectAll('.x.axis .tick line').remove();
+    // add class to ticks
+    d3.selectAll('.x.axis g.tick')
+      .select('text')
+      .style('text-anchor', function(d) { 
+        console.log(d);
+        switch(d) {
+          case 0.6:
+            return 'start';
+            break;
+          case 30:
+            return 'end';
+            break;
+          default:
+            return 'middle';
+        }
+      });
   };
 
   /*
@@ -471,11 +493,18 @@ document.addEventListener('DOMContentLoaded', function(){
     d3.select(chart.node().parentNode)
       .attr('width', width + margin.left + margin.right);
       //.attr('height', height + margin.top + margin.bottom);
-    //x.range([0, width]);
+    x.range([0, width]);
     //y.range([height, 0]);
-    //chart.select('.x.axis')
-      //.attr("transform", "translate(0," + height + ")")
-      //.call(xAxis);
+    chart.select('.x.axis')
+      .call(xAxis);
+    // Fix ticks!!!!
+    //d3.selectAll('.x.axis g.tick')
+    //  .attr('class', function(d,i) { return 'tick_' + d; });
+    /*d3.selectAll('.x.axis g.tick')
+      .filter(function(d){ return d==30; } )
+      .select('text')
+      .style('text-anchor', 'end');*/
+    
     //xAxis
     //  .scale(x)
     //  .tickValues([0,.33,.66,1]);
@@ -541,25 +570,3 @@ addCommas = function(input){
     }
   );
 };
-
-/*
-// Reposition the xAxis labels manually, by finding appropriate tick value and setting text-anchor
-function repositionXAxisLabels() {
-  d3.selectAll('.x.axis g.tick')
-    .filter(function(d){ return d==1 || d==30 ||d==70;} )
-    .select('text')
-    .style('text-anchor', 'end');
-  d3.selectAll('.x.axis g.tick')
-    .filter(function(d){ return d==0 || d==.33 || d==70;} )
-    .select('text')
-    .style('text-anchor', 'middle');
-  d3.selectAll('.x.axis g.tick')
-    .filter(function(d){ return d==0.3 || d==0.6} )
-    .select('text')
-    .style('text-anchor', 'start');
-  d3.selectAll('.x.axis g.tick')
-    .filter(function(d){ return d==50;} )
-    .select('text')
-    .style('text-anchor', 'middle');
-}
-*/
